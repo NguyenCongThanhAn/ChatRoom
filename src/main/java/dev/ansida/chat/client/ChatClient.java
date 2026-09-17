@@ -26,7 +26,7 @@ import javax.swing.SwingUtilities;
  */
 public class ChatClient extends javax.swing.JFrame {
 
-    private static final String SERVER_HOST = "localhost";
+    private static final String SERVER_HOST = "2401:d800:9411:583:2925:b10b:2740:912b";
     private static final int SERVER_PORT = 31323;
 
     private Socket socket;
