@@ -1,0 +1,13 @@
+# Bỏ qua các file biên dịch
+build/
+dist/
+nbproject/private/
+*.class
+*.jar
+
+# Bỏ qua file cấu hình riêng của các IDE khác nếu có
+.idea/
+.settings/
+.classpath
+.project
+out/
