@@ -150,11 +150,9 @@ public class ChatClient extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void attachBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_attachBtActionPerformed
-        fileChooser.showOpenDialog(this);
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-
             // Giới hạn file nhỏ để tránh tràn bộ nhớ Base64 (< 5MB)
             if (file.length() > 5 * 1024 * 1024) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn file dưới 5MB để gửi qua Base64!");
@@ -184,7 +182,7 @@ public class ChatClient extends javax.swing.JFrame {
     }//GEN-LAST:event_sendBtActionPerformed
 
     private void intputTfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_intputTfActionPerformed
-        // TODO add your handling code here:
+        sendMessage();
     }//GEN-LAST:event_intputTfActionPerformed
 
     private void sendMessage() {
