@@ -26,8 +26,8 @@ import javax.swing.SwingUtilities;
  */
 public class ChatClient extends javax.swing.JFrame {
 
-    private static final String SERVER_HOST = "localhost";
-    private static final int SERVER_PORT = 31323;
+    private static final String SERVER_HOST = "0.tcp.ap.ngrok.io";
+    private static final int SERVER_PORT = 28164;
 
     private Socket socket;
     private DataInputStream reader;
