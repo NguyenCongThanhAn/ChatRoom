@@ -13,6 +13,8 @@ public enum MessageType {
     REQ_LOG,
     RES_LOG,
     CHAT,
+    JOIN,
+    LEAVE,
     FILE,
     SYSTEM;
 }
