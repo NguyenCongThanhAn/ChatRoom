@@ -43,9 +43,9 @@ public class ChatController {
     private void setupNetworkCallback() {
         this.networkEngine.setOnPacketReceivedListener((fromGroupIP, rawData, length) -> {
             // YÊU CẦU: Nếu chưa chọn phòng hoặc gói tin đổ về từ IP khác với phòng hiện tại -> Hủy bỏ ngay lập tức
-            if (currentSelectedGroup == null || !fromGroupIP.equals(currentSelectedGroup.getIpAddress())) {
-                return;
-            }
+//            if (currentSelectedGroup == null || !fromGroupIP.equals(currentSelectedGroup.getIpAddress())) {
+//                return;
+//            }
 
             try {
                 // Giải mã mảng byte nhị phân thành Object Message bằng hàm tĩnh ban đầu của bạn
