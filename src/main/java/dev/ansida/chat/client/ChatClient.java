@@ -169,7 +169,7 @@ public class ChatClient extends javax.swing.JFrame {
                     String filePayload = file.getName() + "|" + base64Content;
                     Message message = new Message(MessageType.FILE, username, filePayload);
 
-                    writer.writeUTF(message.toRawString());
+                    writer.write(message.toBytes());
                 } catch (IOException e) {
                     SwingUtilities.invokeLater(() -> display.append("SYSTEM: Lỗi đọc file không thành công!\n"));
                 }
@@ -191,7 +191,7 @@ public class ChatClient extends javax.swing.JFrame {
             // Tạo đối tượng Message -> Tự động sinh timestamp bên trong
             Message msg = new Message(MessageType.CHAT, username, text);
             try {
-                writer.writeUTF(msg.toRawString()); // "CHAT|Huy|1719234812|Hello"
+                writer.write(msg.toBytes()); // "CHAT|Huy|1719234812|Hello"
             } catch (IOException ex) {
                 Logger.getLogger(ChatClient.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -230,9 +230,9 @@ public class ChatClient extends javax.swing.JFrame {
     private void listenToServer() {
         try {
             while (true) {
-            String rawData = reader.readUTF();
+            byte[] rawData = reader.readAllBytes();
                 // KHÔNG CẦN SPLIT THỦ CÔNG NỮA -> Dùng thẳng class Message dùng chung
-                Message incomingMsg = Message.fromRawString(rawData);
+                Message incomingMsg = Message.fromBytes(rawData, rawData.length);
 
                 SwingUtilities.invokeLater(() -> {
                     switch (incomingMsg.getType()) {
