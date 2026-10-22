@@ -29,22 +29,34 @@ public class MulticastEngine {
     }
 
     private void initNetworkInterface() {
-        try {
-            // Duyệt qua tất cả card mạng để tìm card mạng LAN/Wifi thực tế có hỗ trợ Multicast
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            for (NetworkInterface networkInterface : Collections.list(interfaces)) {
-                if (networkInterface.isUp() && !networkInterface.isLoopback() && networkInterface.supportsMulticast()) {
+    try {
+        java.util.Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+        while (interfaces.hasMoreElements()) {
+            NetworkInterface networkInterface = interfaces.nextElement();
+            
+            // Bỏ qua card mạng đã tắt, card loopback (127.0.0.1) hoặc card không hỗ trợ Multicast
+            if (!networkInterface.isUp() || networkInterface.isLoopback() || !networkInterface.supportsMulticast()) {
+                continue;
+            }
+            
+            // KIỂM TRA QUAN TRỌNG: Đảm bảo Card mạng này có sở hữu ít nhất một địa chỉ IPv4 thực tế
+            java.util.Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+            while (addresses.hasMoreElements()) {
+                InetAddress addr = addresses.nextElement();
+                if (addr instanceof java.net.Inet4Address) { // Đúng card mạng IPv4
                     this.netIf = networkInterface;
-                    System.out.println("[Engine] Đã chọn Card mạng: " + networkInterface.getDisplayName());
+                    System.out.println("[Engine] Đã cấu hình đúng Card mạng IPv4: " + networkInterface.getDisplayName());
                     return;
                 }
             }
-            // Khử lỗi bằng cách bốc đại card mạng đầu tiên nếu không tìm thấy card tối ưu
-            this.netIf = NetworkInterface.getNetworkInterfaces().nextElement();
-        } catch (Exception e) {
-            System.err.println("[Engine Error] Không tìm thấy Card mạng phù hợp: " + e.getMessage());
         }
+        // Phương án dự phòng cuối cùng nếu không tìm thấy card tối ưu
+        this.netIf = NetworkInterface.getNetworkInterfaces().nextElement();
+    } catch (Exception e) {
+        System.err.println("[Engine Error] Không tìm thấy Card mạng phù hợp: " + e.getMessage());
     }
+}
+
 
     public void start() throws IOException {
         if (isRunning) return;
