@@ -160,7 +160,6 @@ public class ChatUI extends JFrame {
 
     // 3. HÀM KHỞI CHẠY CHƯƠNG TRÌNH MẪU (MAIN METHOD)
     public static void main(String[] args) {
-        System.setProperty("java.net.preferIPv4Stack", "true");
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {
