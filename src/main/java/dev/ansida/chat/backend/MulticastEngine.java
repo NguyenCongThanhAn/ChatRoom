@@ -83,7 +83,7 @@ public class MulticastEngine {
         }
 
         // Đặt false để CHO PHÉP nhận gói tin loopback (cần thiết khi test 2 app trên 1 máy)
-        this.socket.setLoopbackMode(false);
+        this.socket.setOption(StandardSocketOptions.IP_MULTICAST_LOOP, false);
         this.socket.setTimeToLive(1); // Giới hạn gói tin trong mạng LAN nội bộ
 
         this.isRunning = true;
