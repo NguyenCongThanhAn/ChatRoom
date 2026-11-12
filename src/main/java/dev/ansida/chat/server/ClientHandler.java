@@ -40,8 +40,8 @@ public class ClientHandler implements Runnable {
     public void run() {
         try {
             while (true) {
-                String raw = dis.readUTF();
-                Message message = Message.fromRawString(raw);
+                byte[] raw = dis.readAllBytes();
+                Message message = Message.fromBytes(raw, raw.length);
                 switch (message.getType()) {
                     case LOGIN -> {
                         this.id = message.getSender();
@@ -52,7 +52,8 @@ public class ClientHandler implements Runnable {
                         for (Message oldMsg : history) {
                             // Đóng gói lại thành gói tin phản hồi lịch sử (RES_LOG)
                             Message resLog = new Message(MessageType.RES_LOG, oldMsg.getSender(), oldMsg.getContent());
-                            this.dos.writeUTF(resLog.toRawString());
+                            this.dos.write(resLog.toBytes());
+                            this.dos.flush();
                         }
                     }
                     case CHAT -> {
@@ -61,7 +62,7 @@ public class ClientHandler implements Runnable {
 
                             // Broadcast chuỗi thô cho tất cả mọi người
                             for (ClientHandler client : SingleSourceOfTruth.getInstance().getAllClients()) {
-                                client.dos.writeUTF(message.toRawString());
+                                client.dos.write(message.toBytes());
                                 client.dos.flush();
                             }
                         }
@@ -71,18 +72,20 @@ public class ClientHandler implements Runnable {
                         String fileName = dis.readUTF();
                         long fileSize = dis.readLong();
 
-                        FileOutputStream fos = new FileOutputStream("./downloads/" + fileName);
-                        byte[] buffer = new byte[4096];
-                        int bytesRead;
-                        long totalRead = 0;
-
-                        while (totalRead < fileSize && (bytesRead = dis.read(buffer, 0, (int) Math.min(buffer.length, fileSize - totalRead))) != -1) {
-                            fos.write(buffer, 0, bytesRead);
-                            totalRead += bytesRead;
+                        try (FileOutputStream fos = new FileOutputStream("./downloads/" + fileName)) {
+                            byte[] buffer = new byte[4096];
+                            int bytesRead;
+                            long totalRead = 0;
+                            
+                            while (totalRead < fileSize && (bytesRead = dis.read(buffer, 0, (int) Math.min(buffer.length, fileSize - totalRead))) != -1) {
+                                fos.write(buffer, 0, bytesRead);
+                                totalRead += bytesRead;
+                            }
                         }
-                        fos.close();
                         System.out.println("Đã nhận xong file: " + fileName);
+                        
                     }
+
                 }
             }
         } catch (Exception e) {
